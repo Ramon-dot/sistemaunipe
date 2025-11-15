@@ -133,4 +133,59 @@ class PresencaController
         header('Location: ' . $redirect_url);
         exit;
     }
+
+    public function salvarTodasPresencas(){
+
+        // Define que a resposta será JSON
+        header('Content-Type: application/json');
+
+        // Lê os dados JSON enviados pelo fetch do JavaScript
+        $json_data = file_get_contents('php://input');
+        $data = json_decode($json_data);
+
+        // Validação inicial
+        if(empty($data->alunos)){
+            echo json_encode(['success' => false, 'message' => 'Nenhum dado de aluno recebido.']);
+            exit;
+        }
+
+        $pdo = dbConnect();
+        try {
+            $pdo->beginTransaction();
+            $sql = "INSERT INTO ListaPresenca (matricula_id, data_aula, presente)
+                    VALUES (:matricula_id, CURDATE(), :presente)
+                    ON DUPLICATE KEY UPDATE presente = :presente_update";
+
+            $stmt = $pdo->prepare($sql);
+
+            foreach ($data->alunos as $aluno){
+                
+                // valida os dados recebidos do JavaScript
+                $matricula_id = filter_var($aluno->matricula_id, FILTER_VALIDATE_INT);
+                $status = filter_var($aluno->status, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 1]]);
+
+                if($matricula_id === false || $status === false){
+                    throw new Exception('Dados de aluno inválidos recebidos.');
+                }
+
+                $stmt->execute([
+                    ':matricula_id' => $matricula_id,
+                    ':presente' => $status,
+                    ':presente_update' => $status
+                ]);
+
+                $pdo->commit();
+
+                // Envia a resposta de sucesso para o JavaScript
+                echo json_encode(['success' => true, 'message' => 'Presenças salvas com sucesso!']);
+            }
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            // Envia a resposta de erro para o JavaScript
+            echo json_encode(['success' => false, 'message' => 'Erro ao salvar: ' . $e->getMessage()]);
+        }
+
+        // Impede de qualquer HTML seja renderizado
+        exit;
+    }
 }

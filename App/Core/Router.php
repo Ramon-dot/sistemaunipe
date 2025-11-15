@@ -26,7 +26,8 @@ class Router
         'disciplinas' => ['DisciplinaController', 'index'],
         'presenca' => ['PresencaController', 'index'],
         'registrar_presenca' => ['PresencaController', 'registrarPresenca'],
-        '404' => ['NotFoundController', 'index'],
+        'presenca_salvar' => ['PresencaController', 'salvarTodasPresencas'],
+        '404' => ['HomeController', 'notFound'],
     ];
 
     /**
