@@ -1,5 +1,11 @@
 <?php
 
+use Dotenv\Dotenv;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv::createUnsafeImmutable(__DIR__ . '/../');
+$dotenv->load();
+
 // Determina a hora da região
 date_default_timezone_set('America/Fortaleza');
 
@@ -7,10 +13,10 @@ date_default_timezone_set('America/Fortaleza');
 define('BASE_URL', getenv('APP_BASE_URL') ?: 'http://sistemaunipe.test');
 
 // Conexão com o Banco de dados
-define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
-define('DB_NAME', getenv('DB_NAME') ?: 'unipe_db');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') ?: '947312');
+define('DB_HOST', getenv('DB_HOST'));
+define('DB_NAME', getenv('DB_NAME'));
+define('DB_USER', getenv('DB_USER'));
+define('DB_PASS', getenv('DB_PASS'));
 
 function dbConnect() {
     try {

@@ -11,6 +11,10 @@ class Router
         'login' => ['LoginController', 'showLoginForm'],
         'login_submit' => ['LoginController', 'processLogin'],
         'logout' => ['LoginController', 'logout'],
+        'recuperar_senha' => ['SenhaController', 'showForm'],
+        'recuperar_senha_submit' => ['SenhaController', 'processEmailRequest'],
+        'resetar_senha_form' => ['SenhaController', 'showResetForm'],
+        'resetar_senha_submit' => ['SenhaController', 'processResetPassword'],
         'cadastro_form' => ['CadastroController', 'showCadastroForm'],
         'cadastro_process' => ['CadastroController', 'processCadastro'],
 
@@ -38,7 +42,11 @@ class Router
         'login',
         'login_submit',
         'cadastro_form',
-        'cadastro_process'
+        'cadastro_process',
+        'recuperar_senha',
+        'recuperar_senha_submit',
+        'resetar_senha_form',
+        'resetar_senha_submit'
     ];
 
     public function dispatch(string $route): void
